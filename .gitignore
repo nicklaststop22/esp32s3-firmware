@@ -1,0 +1,11 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Logs & temp
+*.log
+test_*.bin
+.DS_Store
+Thumbs.db
