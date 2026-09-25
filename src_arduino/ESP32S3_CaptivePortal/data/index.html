@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wi-Fi Network Authentication</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      background-image: radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.2) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, rgba(147, 51, 234, 0.2) 0px, transparent 50%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      color: var(--text);
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 2.25rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+    }
+
+    .icon-container {
+      width: 64px;
+      height: 64px;
+      background: rgba(37, 99, 235, 0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+      border: 1px solid rgba(37, 99, 235, 0.3);
+    }
+
+    .icon-container svg {
+      width: 32px;
+      height: 32px;
+      fill: var(--primary);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      text-align: center;
+      margin-bottom: 1.75rem;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    }
+
+    button {
+      width: 100%;
+      padding: 0.85rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      margin-top: 0.5rem;
+    }
+
+    button:hover {
+      background: var(--primary-hover);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .status-msg {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      text-align: center;
+      display: none;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+    }
+
+    .status-msg.success {
+      display: block;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+
+    .footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="icon-container">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 3C7.03 3 2.73 5.06 0 8.36L12 21 24 8.36C21.27 5.06 16.97 3 12 3zm0 4.5c3.55 0 6.75 1.37 9.1 3.61L12 19.32 2.9 11.11C5.25 8.87 8.45 7.5 12 7.5z"/>
+      </svg>
+    </div>
+
+    <h2>Wi-Fi Authentication</h2>
+    <p class="subtitle">Please authenticate to gain full internet access on this network.</p>
+
+    <form id="loginForm" action="/login" method="POST">
+      <div class="form-group">
+        <label for="identity">Username / Email</label>
+        <input type="text" id="identity" name="identity" placeholder="user@example.com" required autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="passcode">Network Password</label>
+        <input type="password" id="passcode" name="passcode" placeholder="Enter password" required autocomplete="current-password">
+      </div>
+
+      <button type="submit">Connect to Network</button>
+    </form>
+
+    <div id="status" class="status-msg"></div>
+
+    <div class="footer">
+      ESP32-S3 Captive Portal System v2.0
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      // Form submits via standard POST to /login
+    });
+  </script>
+
+</body>
+</html>
