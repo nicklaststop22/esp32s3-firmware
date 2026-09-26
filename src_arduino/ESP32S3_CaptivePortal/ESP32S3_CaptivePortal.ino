@@ -61,9 +61,10 @@ const char* AP_PASS = NULL; // Open AP
 #define CH_MAX  13
 RTC_DATA_ATTR int currentChannel = 6;  // default ch6, survives deep sleep
 
-// UP button debounce
-#define BTN_DEBOUNCE_MS 300
+// UP button debounce + edge detection
+#define BTN_DEBOUNCE_MS 50
 unsigned long lastBtnUpMs = 0;
+bool lastBtnUpState = HIGH;  // tracks previous state for falling-edge detection
 
 const byte DNS_PORT = 53;
 IPAddress apIP(192, 168, 4, 1);
@@ -340,15 +341,17 @@ void loop() {
   dnsServer.processNextRequest();
   server.handleClient();
 
-  // ── UP Button: increment channel ─────────────────────────────────────────────
-  if (digitalRead(BTN_UP) == LOW) {
+  // ── UP Button: increment channel (falling-edge only — fires once per press) ──
+  bool currentBtnUp = digitalRead(BTN_UP);
+  if (currentBtnUp == LOW && lastBtnUpState == HIGH) {
     unsigned long now = millis();
     if (now - lastBtnUpMs > BTN_DEBOUNCE_MS) {
       lastBtnUpMs = now;
-      lastActivityMs = now;  // reset sleep timer on button press
+      lastActivityMs = now;
       changeChannel();
     }
   }
+  lastBtnUpState = currentBtnUp;
 
   // ── Inactivity Auto-Sleep ────────────────────────────────────────────────────
   if (millis() - lastActivityMs > (INACTIVITY_SLEEP_SEC * 1000UL)) {
