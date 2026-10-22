@@ -12,17 +12,17 @@
     buttons (physical GPIO buttons you wire up - see pin config below).
   * Admin dashboard at /admin (login: see ADMIN_USER/ADMIN_PASS below).
       - Up to 25 captured credential pairs, viewable + one-click clear.
-      - Passive channel 1/6/11 scanner (listen-only, no transmit).
+      - Passive channel 1/6/11 scanner.
       - Passive probe-request sniffer: shows which SSIDs nearby devices
         are hunting for (MAC -> SSID). Modern phones randomize their MAC
         on probes, so expect some noise mixed with real hits.
 
-  WHAT'S DELIBERATELY NOT HERE: a deauther / jammer. Deauth frames hit the
-  shared RF spectrum and can knock ANY nearby device offline, not just
-  yours - the FCC treats this as illegal intentional interference even on
-  a network you own outright. Not included, not a toggle-away TODO.
-  Everything here is receive-only (scanning, sniffing) - nothing in this
-  file ever transmits a frame that wasn't a normal AP/portal response.
+   NEEDS ADDED
+  -------
+  * Deauther
+  * AP name changer in admin control panel
+
+ 
 
   ---- STUFF YOU'LL LIKELY WANT TO TWEAK ----
   * LED_PIN_A / LED_PIN_B     - status LED wiring (A1/A0 by default)
@@ -158,8 +158,8 @@ void startSniffer() {
 }
 
 // ================== PASSIVE CHANNEL 1/6/11 SCAN ==================
-// Listen-only: WiFi.scanNetworks() just reads beacon frames, never transmits
-// a deauth or anything disruptive. Briefly hops channels to scan, which can
+//  Still needs deauther with options for targeting single ssid or channel or channel hopping
+//  Briefly hops channels to scan, which can
 // cause a short AP hiccup for connected clients - that's normal, not a bug.
 String scanResultsHTML() {
   String out = "<table class='t'><tr><th>SSID</th><th>Ch</th><th>RSSI</th><th>Enc</th></tr>";
@@ -435,7 +435,7 @@ void setup() {
   WiFi.softAPConfig(apIP, apIP, netMsk);
   WiFi.softAP(AP_SSID);
 
-  startSniffer(); // passive probe-request listener - never transmits
+  startSniffer(); // passive probe-request listener 
 
   dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
   dnsServer.start(DNS_PORT, "*", apIP);
