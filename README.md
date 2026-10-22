@@ -2,7 +2,6 @@
 
 The canonical home for this project's ESP32-S3 captive-portal work. Two source builds live here, plus a full firmware/partition backup of the flashed hardware.
 
-> This repo is private. **[s3-captive-portal](https://github.com/nicklaststop22/s3-captive-portal)** is a public byte-identical mirror of just the `EvilPortal_Custom` build below — edit source here, not there.
 
 ## Source builds (`src_arduino/`)
 
